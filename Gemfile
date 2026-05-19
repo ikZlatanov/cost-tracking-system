@@ -72,3 +72,7 @@ end
 
 gem "pundit"
 gem "kaminari", "~> 1.2"
+
+gem "brakeman", "~> 8.0", :groups => [:development, :test]
+gem "rubocop", "~> 1.86", :groups => [:development, :test]
+gem "rubocop-rails-omakase", "~> 1.1", :groups => [:development, :test]

@@ -1,0 +1,51 @@
+name: Rails CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    # We need to spin up a blank PostgreSQL database for the tests to run against
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: postgres://postgres:password@localhost:5432/cost_tracking_test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby and install gems
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true # Caches gems to make the pipeline run much faster!
+
+      - name: Setup Database
+        run: bin/rails db:test:prepare
+
+      - name: Security Scan (Brakeman)
+        run: bundle exec brakeman -q -w2
+
+      - name: Linting (RuboCop)
+        run: bundle exec rubocop --parallel
+
+      - name: Run Tests (Minitest)
+        run: bin/rails test
