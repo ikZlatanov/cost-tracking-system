@@ -109,9 +109,9 @@
   new Chart(ctxCat, {
       type: 'pie',
       data: {
-          labels: <%= raw @category_data.keys %>,
+          labels: <%= raw json_escape(@category_data.keys.to_json) %>,
           datasets: [{
-              data: <%= raw @category_data.values %>,
+              data: <%= raw json_escape(@category_data.values.to_json) %>,
               backgroundColor: ['#003e8d', '#fbbf24', '#10b981', '#ef4444', '#8b5cf6']
           }]
       },
