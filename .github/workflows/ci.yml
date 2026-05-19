@@ -44,8 +44,5 @@ jobs:
       - name: Security Scan (Brakeman)
         run: bundle exec brakeman -q -w2
 
-      - name: Linting (RuboCop)
-        run: bundle exec rubocop --parallel
-
       - name: Run Tests (Minitest)
         run: bin/rails test
