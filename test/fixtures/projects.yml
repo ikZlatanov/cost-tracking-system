@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  client_name: MyString
+  manager_id: 1
+  status: MyString
+  deleted_at: 2026-04-06 17:49:42
+
+two:
+  name: MyString
+  client_name: MyString
+  manager_id: 1
+  status: MyString
+  deleted_at: 2026-04-06 17:49:42

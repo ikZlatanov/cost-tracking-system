@@ -1,0 +1,219 @@
+<div class="min-h-screen flex flex-col bg-slate-50">
+  <%= render 'shared/header' %>
+  
+  <main class="flex-grow p-4 md:p-8">
+    <div class="text-center max-w-4xl mx-auto">
+      <h1 class="text-4xl font-extrabold text-slate-900 mb-4">Admin Dashboard</h1>
+      <h2 class="text-2xl text-[#003e8d]">Welcome, <%= current_user.first_name %> <%= current_user.last_name %>!</h2>
+      
+      <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <%= link_to new_expense_path, class: "inline-flex items-center px-6 py-3 border border-slate-300 text-base font-medium rounded-md shadow-sm text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#003e8d] transition-colors w-full sm:w-auto justify-center" do %>
+          <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 -ml-1 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+          </svg>
+          Log Manual Expense
+        <% end %>
+
+        <%= link_to new_csv_import_path, class: "inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-[#003e8d] hover:bg-[#003e8d]/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#003e8d] transition-colors w-full sm:w-auto justify-center" do %>
+          <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 -ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+          </svg>
+          Import CSV File
+        <% end %>
+        <%= link_to admin_analytics_path, class: "inline-flex items-center px-6 py-3 border border-slate-300 text-base font-medium rounded-md shadow-sm text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#003e8d] transition-colors w-full sm:w-auto justify-center" do %>
+          <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 -ml-1 text-[#003e8d]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+          View Global Analytics
+        <% end %>
+      </div>
+
+      <% if @zombie_expenses && @zombie_expenses.any? %>
+        <div class="mt-8 bg-red-50 border-l-4 border-red-600 p-5 rounded-r-xl shadow-sm text-left max-w-4xl mx-auto">
+          <div class="flex items-start">
+            <div class="flex-shrink-0">
+              <svg aria-hidden="true" class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <div class="ml-4 w-full">
+              <h3 class="text-lg font-bold text-red-800">Action Needed: Zombie Resources Detected</h3>
+              <p class="mt-1 text-sm text-red-700">
+                The ingestion engine flagged <strong><%= @zombie_expenses.count %></strong> recent bills tied to inactive projects. Please review these immediately.
+              </p>
+              <div class="mt-4">
+                <ul class="space-y-2">
+                  <% @zombie_expenses.limit(3).each do |zombie| %>
+                    <li class="text-sm font-medium text-red-900 bg-red-100/50 px-3 py-2 rounded border border-red-200">
+                      <span class="font-bold"><%= zombie.vendor_name %></span> billed <%= zombie.amount %> <%= zombie.currency %> for <span class="underline"><%= zombie.project.name %></span> (Status: <%= zombie.project.status %>)
+                    </li>
+                  <% end %>
+                  <% if @zombie_expenses.count > 3 %>
+                    <li class="text-xs text-red-600 font-bold italic mt-2">+ <%= @zombie_expenses.count - 3 %> more...</li>
+                  <% end %>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      </div>
+
+    <div class="mt-12 max-w-full mx-auto">
+      <div class="flex flex-col sm:flex-row justify-between items-end mb-6 border-b border-slate-300 pb-2">
+        <h3 class="text-2xl font-bold text-slate-900">Global Project & Expense Tracker</h3>
+      </div>
+      
+      <div class="mb-8 bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+        <%= form_with url: admin_dashboard_path, method: :get, class: "flex flex-col sm:flex-row gap-4 items-end", data: { turbo: false } do |f| %>
+          <div class="flex-1 w-full">
+            <%= f.label :project_id, "Filter by Project", class: "block text-sm font-semibold text-slate-700 mb-1" %>
+            <%= f.collection_select :project_id, Project.all, :id, :name, { prompt: "All Projects", selected: params[:project_id] }, { class: "w-full text-sm border-slate-300 rounded-lg focus:ring-[#003e8d] focus:border-[#003e8d] py-2.5" } %>
+          </div>
+          
+          <div class="flex-1 w-full">
+            <%= f.label :currency, "Filter by Currency", class: "block text-sm font-semibold text-slate-700 mb-1" %>
+            <%= f.select :currency, ['USD', 'EUR', 'GBP', 'BGN'], { prompt: "All Currencies", selected: params[:currency] }, { class: "w-full text-sm border-slate-300 rounded-lg focus:ring-[#003e8d] focus:border-[#003e8d] py-2.5" } %>
+          </div>
+          
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <%= f.submit "Apply Filters", class: "w-full sm:w-auto px-6 py-2.5 text-sm font-medium text-white bg-[#003e8d] rounded-lg hover:bg-[#003e8d]/90 cursor-pointer transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-[#003e8d]" %>
+            
+            <% if params[:project_id].present? || params[:currency].present? %>
+              <%= link_to "Clear", admin_dashboard_path, class: "w-full sm:w-auto px-6 py-2.5 text-center text-sm font-medium text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors" %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+
+      <% if @projects.present? %>
+        <%= form_with url: '#', method: :post, local: true do |f| %>
+          <% @projects.each do |project| %>
+            
+            <% expenses_to_show = project.expenses.order(expense_date: :desc) %>
+            <% expenses_to_show = expenses_to_show.select { |e| e.currency == params[:currency] } if params[:currency].present? %>
+
+            <div class="bg-white shadow-md rounded-lg mb-10 overflow-hidden border border-slate-200">
+              <div class="px-6 py-5 bg-slate-100 border-b border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                  <h4 class="text-xl font-bold text-slate-800 flex items-center gap-3">
+                    <%= project.name %> 
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-medium 
+                      <%= case project.status
+                          when 'Active' then 'bg-green-100 text-green-800'
+                          when 'Completed', 'Archived' then 'bg-slate-200 text-slate-800'
+                          when 'Paused' then 'bg-amber-100 text-amber-800'
+                          else 'bg-slate-200 text-slate-800'
+                          end %>">
+                      <%= project.status || 'Draft' %>
+                    </span>
+                  </h4>
+                  <p class="text-sm text-slate-600 mt-1">Client: <strong><%= project.client_name.presence || 'N/A' %></strong></p>
+                </div>
+                <div class="text-right">
+                  <span class="block text-sm font-medium text-slate-700">Total Displayed Expenses: <%= expenses_to_show.count %></span>
+                  <span class="block text-xs text-slate-600">Manager: <%= project.manager&.first_name || 'Unassigned' %> <%= project.manager&.last_name %></span>
+                </div>
+              </div>
+
+              <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-slate-200">
+                  <thead class="bg-slate-50">
+                    <tr>
+                      <th scope="col" class="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Select</th>
+                      <th scope="col" class="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Date</th>
+                      <th scope="col" class="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Vendor / Category</th>
+                      <th scope="col" class="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Description</th>
+                      <th scope="col" class="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Amount</th>
+                      <th scope="col" class="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Status</th>
+                      <th scope="col" class="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Submitted By</th>
+                      <th scope="col" class="px-4 py-3 text-right text-xs font-semibold text-slate-600 uppercase tracking-wider">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody class="bg-white divide-y divide-slate-200">
+                    <% if expenses_to_show.any? %>
+                      <% expenses_to_show.each do |expense| %>
+                        <tr class="hover:bg-slate-50 transition-colors <%= 'bg-red-50' if expense.is_zombie %>">
+                          
+                          <td class="px-4 py-4 whitespace-nowrap">
+                            <%= check_box_tag "expense_ids[]", expense.id, false, id: "expense_#{expense.id}", class: "h-4 w-4 text-[#003e8d] focus:ring-[#003e8d] border-slate-300 rounded cursor-pointer", aria: { label: "Select expense from #{expense.vendor_name}" } %>
+                          </td>
+                          
+                          <td class="px-4 py-4 whitespace-nowrap text-sm text-slate-600">
+                            <%= expense.expense_date&.strftime('%b %d, %Y') || 'N/A' %>
+                          </td>
+                          
+                          <td class="px-4 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-slate-900"><%= expense.vendor_name.presence || 'Unknown Vendor' %></div>
+                            <div class="text-xs text-slate-600"><%= expense.category&.name || 'Uncategorized' %></div>
+                          </td>
+                          
+                          <td class="px-4 py-4 text-sm text-slate-600 max-w-xs truncate" title="<%= expense.description %>">
+                            <%= expense.description.presence || '-' %>
+                            <% if expense.is_zombie %>
+                              <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
+                                Zombie
+                              </span>
+                            <% end %>
+                          </td>
+                          
+                          <td class="px-4 py-4 whitespace-nowrap text-sm font-semibold text-slate-900">
+                            <%= expense.amount %> <span class="text-xs text-slate-600 font-normal"><%= expense.currency %></span>
+                          </td>
+                          
+                          <td class="px-4 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                              <%= case expense.status
+                                  when 'Approved' then 'bg-green-100 text-green-800'
+                                  when 'Pending' then 'bg-amber-100 text-amber-800'
+                                  when 'Rejected' then 'bg-red-100 text-red-800'
+                                  else 'bg-slate-100 text-slate-800'
+                                  end %>">
+                              <%= expense.status || 'Draft' %>
+                            </span>
+                          </td>
+
+                          <td class="px-4 py-4 whitespace-nowrap text-sm text-slate-600">
+                            <%= expense.creator&.first_name || 'N/A' %>
+                          </td>
+
+                          <td class="px-4 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                            <%= link_to 'View', expense_path(expense), class: "text-[#003e8d] hover:text-[#003e8d]/80" %>
+                            <%= link_to 'Edit', edit_expense_path(expense), class: "text-amber-700 hover:text-amber-900" %>
+                            <%= button_to 'Delete', expense_path(expense), method: :delete, data: { turbo_confirm: 'Are you sure?' }, class: "text-red-700 hover:text-red-900 inline-block bg-transparent border-none p-0 cursor-pointer" %>
+                          </td>
+                        </tr>
+                      <% end %>
+                    <% else %>
+                      <tr>
+                        <td colspan="8" class="px-4 py-8 whitespace-nowrap text-sm text-slate-600 text-center italic bg-slate-50/50">
+                          <% if params[:currency].present? %>
+                            No expenses found matching currency: <strong><%= params[:currency] %></strong>
+                          <% else %>
+                            No expenses recorded for this project yet.
+                          <% end %>
+                        </td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      <% else %>
+        <div class="bg-white shadow rounded-lg p-10 text-center text-slate-600 border border-slate-200">
+          <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-slate-500 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+          </svg>
+          No projects found matching your filters.
+          <div class="mt-4">
+             <%= link_to "Clear Filters", admin_dashboard_path, class: "text-[#003e8d] hover:underline font-medium" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </main>
+  
+  <%= render 'shared/footer' %>
+</div>

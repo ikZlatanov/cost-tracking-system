@@ -1,0 +1,38 @@
+<nav class="bg-white shadow-sm border-b border-slate-200">
+  <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-16 items-center">
+      
+      <div class="flex-shrink-0 flex items-center gap-8">
+        <%= link_to root_path do %>
+          <%= image_tag "wollowLogo.png", class: "h-8 w-auto", alt: "Wollow Company Logo" %>
+        <% end %>
+
+        <% if current_user %>
+          <% dashboard_link = case current_user.role
+                              when 'admin' then admin_dashboard_path
+                              when 'project_manager' then pm_dashboard_path
+                              when 'developer' then developer_dashboard_path
+                              else root_path
+                              end %>
+          
+          <%= link_to "Dashboard", dashboard_link, class: "text-sm font-bold text-slate-700 hover:text-[#003e8d] transition-colors" %>
+          
+          <%= link_to "Cost History", expenses_path, class: "text-sm font-bold text-slate-700 hover:text-[#003e8d] transition-colors" %>
+        <% end %>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <% if current_user %>
+          <span class="text-sm text-slate-500 hidden sm:inline-block">
+            Logged in as <strong class="text-slate-800"><%= current_user.role.titleize %></strong>
+          </span>
+          
+          <%= button_to "Log Out", logout_path, method: :delete, class: "text-sm font-medium px-3 py-2 rounded-md text-red-600 hover:bg-red-50 hover:text-red-800 transition-colors" %>
+        <% else %>
+          <%= link_to "Log In", login_path, class: "text-sm font-medium text-[#003e8d] hover:underline" %>
+        <% end %>
+      </div>
+      
+    </div>
+  </div>
+</nav>

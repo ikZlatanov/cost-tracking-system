@@ -1,0 +1,71 @@
+<style>
+  body { overflow: hidden; }
+</style>
+
+<div class="h-screen flex flex-col items-center justify-center bg-slate-50">
+  <div class="py-6 px-4 w-full">
+    <div class="grid lg:grid-cols-2 items-center gap-6 max-w-6xl mx-auto w-full">
+      
+      <div class="bg-white border border-slate-200 rounded-xl p-8 max-w-md shadow-lg max-lg:mx-auto w-full">
+        
+        <div class="mb-8 flex justify-center">
+          <%= image_tag "wollowLogo.png", class: "h-10 w-auto" %>
+        </div>
+            <% if flash[:alert] %>
+            <div class="mb-4 bg-red-50 border-l-4 border-red-500 p-4 rounded-md">
+                <p class="text-red-700 text-sm font-medium"><%= flash[:alert] %></p>
+            </div>
+            <% end %>
+            <%= form_with url: login_path, data: { turbo: false }, class: "space-y-6" do |f| %>         
+             <div class="mb-8 text-center">
+            <h1 class="text-slate-900 text-3xl font-bold tracking-tight">Sign in</h1>
+          </div>
+
+          <div>
+            <label class="text-slate-900 text-sm font-semibold mb-2 block">Email address</label>
+            <div class="relative flex items-center">
+              <%= f.email_field :email, class: "w-full text-sm text-slate-900 border border-slate-300 pl-4 pr-10 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all", placeholder: "Enter your email" %>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" class="w-[18px] h-[18px] absolute right-4" viewBox="0 0 24 24">
+                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+              </svg>
+            </div>
+          </div>
+          
+          <div data-controller="password-visibility">
+            <label class="text-slate-900 text-sm font-semibold mb-2 block">Password</label>
+            <div class="relative flex items-center">
+                
+                <%= f.password_field :password, data: { "password-visibility-target": "input" }, class: "w-full text-sm text-slate-900 border border-slate-300 pl-4 pr-10 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all", placeholder: "Enter password" %>                
+                <svg data-action="click->password-visibility#toggle" xmlns="http://www.w3.org/2000/svg" fill="#bbb" class="w-[18px] h-[18px] absolute right-4 cursor-pointer hover:fill-blue-600 transition-colors" viewBox="0 0 128 128">
+                <path d="M64 104C22.127 104 1.367 67.496.504 65.943a4 4 0 0 1 0-3.887C1.367 60.504 22.127 24 64 24s62.633 36.504 63.496 38.057a4 4 0 0 1 0 3.887C126.633 67.496 105.873 104 64 104zM8.707 63.994C13.465 71.205 32.146 96 64 96c31.955 0 50.553-24.775 55.293-31.994C114.535 56.795 95.854 32 64 32 32.045 32 13.447 56.775 8.707 63.994zM64 88c-13.234 0-24-10.766-24-24s10.766-24 24-24 24 10.766 24 24-10.766 24-24 24zm0-40c-8.822 0-16 7.178-16 16s7.178 16 16 16 16-7.178 16-16-7.178-16-16-16z"></path>
+                </svg>
+            </div>
+        </div>
+          
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center">
+              <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 shrink-0 text-blue-600 focus:ring-blue-500 border-slate-300 rounded" />
+              <label for="remember-me" class="ml-3 block text-sm text-slate-700">
+                Remember me
+              </label>
+            </div>
+            <div class="text-sm">
+              <a href="#" class="text-[#003e8d] hover:underline font-medium">
+                Forgot password?
+              </a>
+            </div>
+          </div>
+
+          <div class="!mt-8">
+          <%= f.submit "Sign in", class: "w-full shadow-md py-3 px-4 text-[15px] font-semibold tracking-wide rounded-lg text-white bg-[#003e8d] hover:bg-[#003e8d]/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#003e8d] transition-colors cursor-pointer" %>
+        </div>
+        <% end %>
+      </div>
+
+      <div class="hidden lg:block">
+        <img src="https://readymadeui.com/login-image.webp" class="w-full aspect-[71/50] mx-auto block object-cover rounded-2xl shadow-xl" alt="login dashboard illustration" />
+      </div>
+      
+    </div>
+  </div>
+</div>
