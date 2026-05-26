@@ -9,8 +9,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    
-    # We need to spin up a blank PostgreSQL database for the tests to run against
+
     services:
       postgres:
         image: postgres:14
@@ -36,7 +35,7 @@ jobs:
       - name: Setup Ruby and install gems
         uses: ruby/setup-ruby@v1
         with:
-          bundler-cache: true # Caches gems to make the pipeline run much faster!
+          bundler-cache: true
 
       - name: Setup Database
         run: bin/rails db:test:prepare
@@ -46,3 +45,18 @@ jobs:
 
       - name: Run Tests (Minitest)
         run: bin/rails test
+
+  deploy-staging:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Trigger Render staging deployment
+        run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+
+      - name: Wait for deployment
+        run: sleep 60
+
+      - name: Smoke test staging app
+        run: curl -f "https://cost-tracking-system.onrender.com"
