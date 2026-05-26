@@ -1,0 +1,3 @@
+Vendor Name,Amount,Currency,Expense Date,Description,Category Name,Project Name
+AWS,125.50,EUR,2026-05-01,Monthly cloud hosting,Hosting,Wollow Platform
+Azure,40.00,EUR,2026-05-02,Old project server,Hosting,Legacy Migration

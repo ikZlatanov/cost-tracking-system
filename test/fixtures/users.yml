@@ -1,17 +1,20 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+admin:
+  first_name: Admin
+  last_name: User
+  email: admin@wollow.com
+  password_digest: <%= BCrypt::Password.create("password123") %>
+  role: admin
 
-one:
-  first_name: MyString
-  last_name: MyString
-  email: MyString
-  password_digest: MyString
-  role: MyString
-  deleted_at: 2026-04-06 17:49:06
+project_manager:
+  first_name: Project
+  last_name: Manager
+  email: pm@wollow.com
+  password_digest: <%= BCrypt::Password.create("password123") %>
+  role: project_manager
 
-two:
-  first_name: MyString
-  last_name: MyString
-  email: MyString
-  password_digest: MyString
-  role: MyString
-  deleted_at: 2026-04-06 17:49:06
+developer:
+  first_name: Dev
+  last_name: User
+  email: dev@wollow.com
+  password_digest: <%= BCrypt::Password.create("password123") %>
+  role: developer

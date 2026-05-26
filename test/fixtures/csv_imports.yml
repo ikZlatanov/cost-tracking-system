@@ -1,7 +1,5 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+developer_import:
+  user: developer
 
-one:
-  user: one
-
-two:
-  user: two
+admin_import:
+  user: admin

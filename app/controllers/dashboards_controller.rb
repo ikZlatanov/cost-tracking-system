@@ -1,4 +1,5 @@
 class DashboardsController < ApplicationController
+
   def analytics
     authorize :dashboard, :admin? 
 
