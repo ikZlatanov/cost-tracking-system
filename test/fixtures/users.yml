@@ -1,20 +1,20 @@
 admin:
-  first_name: Admin
-  last_name: User
-  email: admin@wollow.com
-  password_digest: <%= BCrypt::Password.create("password123") %>
+  first_name: Ivelin
+  last_name: Zlatanov
+  email: i.zlatanov@wollow.com
+  password_digest: <%= BCrypt::Password.create("iZlatanov123") %>
   role: admin
 
 project_manager:
-  first_name: Project
-  last_name: Manager
-  email: pm@wollow.com
-  password_digest: <%= BCrypt::Password.create("password123") %>
+  first_name: James
+  last_name: Bond
+  email: j.bond@wollow.com
+  password_digest: <%= BCrypt::Password.create("bond123James") %>
   role: project_manager
 
 developer:
-  first_name: Dev
-  last_name: User
-  email: dev@wollow.com
-  password_digest: <%= BCrypt::Password.create("password123") %>
+  first_name: Michael
+  last_name: Jordan
+  email: m.jordan@wollow.com
+  password_digest: <%= BCrypt::Password.create("michaelJ123") %>
   role: developer
