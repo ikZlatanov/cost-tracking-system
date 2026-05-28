@@ -7,6 +7,14 @@ class CsvImportsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to login_path
   end
 
+  test "logged in user can view new csv import page" do
+    login_as(:developer)
+
+    get new_csv_import_path
+
+    assert_response :success
+  end
+
   test "shows error when no file is selected" do
     login_as(:developer)
 
@@ -28,25 +36,6 @@ class CsvImportsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_redirected_to developer_dashboard_path
-  end
-
-  private
-
-  def login_as(user_fixture)
-    user = users(user_fixture)
-
-    post login_path, params: {
-      email: user.email,
-      password: "password123"
-    }
-  end
-
-    test "logged in user can view new csv import page" do
-    login_as(:developer)
-
-    get new_csv_import_path
-
-    assert_response :success
   end
 
   test "csv upload with malformed file shows parsing error" do

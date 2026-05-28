@@ -8,7 +8,7 @@ class UserTest < ActiveSupport::TestCase
   test "user can authenticate with correct password" do
     user = users(:developer)
 
-    assert user.authenticate("password123")
+    assert user.authenticate("michaelJ123")
   end
 
   test "user does not authenticate with wrong password" do

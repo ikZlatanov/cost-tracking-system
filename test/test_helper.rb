@@ -16,13 +16,13 @@ ENV["RAILS_ENV"] ||= "test"
 
 require_relative "../config/environment"
 require "rails/test_help"
+require_relative "test_helpers/session_helper"
 
-module ActiveSupport
-  class TestCase
-    # Disable parallel workers temporarily so SimpleCov
-    # reports coverage correctly
-    parallelize(workers: 1)
+class ActiveSupport::TestCase
+  parallelize(workers: 1)
+  fixtures :all
+end
 
-    fixtures :all
-  end
+class ActionDispatch::IntegrationTest
+  include SessionHelper
 end

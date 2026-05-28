@@ -2,28 +2,19 @@ require "test_helper"
 
 class SessionsControllerTest < ActionDispatch::IntegrationTest
   test "logs in admin and redirects to admin dashboard" do
-    post login_path, params: {
-      email: users(:admin).email,
-      password: "password123"
-    }
+    login_as(:admin)
 
     assert_redirected_to admin_dashboard_path
   end
 
   test "logs in project manager and redirects to project manager dashboard" do
-    post login_path, params: {
-      email: users(:project_manager).email,
-      password: "password123"
-    }
+    login_as(:project_manager)
 
     assert_redirected_to pm_dashboard_path
   end
 
   test "logs in developer and redirects to developer dashboard" do
-    post login_path, params: {
-      email: users(:developer).email,
-      password: "password123"
-    }
+    login_as(:developer)
 
     assert_redirected_to developer_dashboard_path
   end
@@ -34,7 +25,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
       password: ""
     }
 
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
     assert_equal "Please write something for your password.", flash[:alert]
   end
 
@@ -44,7 +35,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
       password: "password123"
     }
 
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
     assert_equal "Contact administration. Account not found.", flash[:alert]
   end
 
@@ -54,15 +45,12 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
       password: "wrong"
     }
 
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
     assert_equal "The password you entered is wrong.", flash[:alert]
   end
 
   test "logs out user" do
-    post login_path, params: {
-      email: users(:developer).email,
-      password: "password123"
-    }
+    login_as(:developer)
 
     delete logout_path
 

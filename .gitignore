@@ -37,3 +37,12 @@
 /app/assets/builds/*
 !/app/assets/builds/.keep
 *.deb
+
+
+coverage/
+storage/*
+!storage/.keep
+*.deb
+config/master.key
+tmp/
+log/

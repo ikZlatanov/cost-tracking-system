@@ -42,7 +42,7 @@ class ExpensesControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to new_expense_path
   end
 
-  test "invalid expense returns unprocessable entity" do
+  test "invalid expense returns unprocessable content" do
     login_as(:developer)
 
     post expenses_path, params: {
@@ -70,18 +70,7 @@ class ExpensesControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to admin_dashboard_path
   end
 
-  private
-
-  def login_as(user_fixture)
-    user = users(user_fixture)
-
-    post login_path, params: {
-      email: user.email,
-      password: "password123"
-    }
-  end
-
-    test "logged in user can view expenses index" do
+  test "logged in user can view expenses index" do
     login_as(:admin)
 
     get expenses_path
@@ -138,6 +127,7 @@ class ExpensesControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to expense_path(@expense)
     assert_equal "Updated Vendor", @expense.reload.vendor_name
+    assert_equal "Approved", @expense.status
   end
 
   test "admin update with invalid expense returns unprocessable content" do
